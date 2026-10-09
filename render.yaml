@@ -7,5 +7,5 @@ services:
     healthCheckPath: /health
     envVars:
       - key: FRONTEND_ORIGINS
-        value: "*"
+        value: https://YOUR-WEBSITE.netlify.app
         
