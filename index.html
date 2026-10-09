@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070b20">
+<title>4K Nova — Video Downloader</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#0c1530;--line:#233568;--purple:#853cff;--blue:#2765ff;--text:#f4f7ff;--muted:#a6b9e4}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,#17245b 0,transparent 48%),var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{padding:18px 6%;border-bottom:1px solid #1d2b53;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:27px;font-weight:800}.logo span{color:#a46aff}
+header small{color:var(--muted)}
+main{max-width:940px;margin:auto;padding:55px 20px}
+.hero{text-align:center}.hero h1{font-size:clamp(34px,7vw,58px);margin:0 0 12px}.hero h1 span{color:#a46aff}
+.hero p{color:var(--muted);line-height:1.7}
+.card{margin:30px auto;padding:22px;background:#0b1430eF;border:1px solid #384b91;border-radius:18px;box-shadow:0 0 45px #5424a522}
+.platforms{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.platform{padding:9px 12px;border:1px solid var(--line);border-radius:9px;color:#d7e2ff;font-size:13px}
+input{width:100%;padding:17px;border:1px solid #394c86;border-radius:11px;background:#060c20;color:white;font-size:16px;outline:none}
+button{padding:14px 20px;border:0;border-radius:10px;color:white;background:linear-gradient(100deg,var(--purple),var(--blue));font-size:15px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.actions button{flex:1}
+#status{color:#c2d4ff;line-height:1.6;overflow-wrap:anywhere;margin-top:16px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:35px}
+.feature{padding:19px;background:var(--panel);border:1px solid #1e315e;border-radius:13px}
+.feature p{color:var(--muted);font-size:14px;line-height:1.6}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header><div class="logo">▶ 4K <span>Nova</span></div><small>Universal Video Downloader</small></header>
+<main>
+<section class="hero">
+<h1>Download Videos.<br><span>Anytime, Anywhere.</span></h1>
+<p>Paste a video link to check supported formats and available quality.<br>Up to 1080p when the source supports it.</p>
+</section>
+<section class="card">
+<div class="platforms">
+<div class="platform">▶ YouTube</div><div class="platform">♪ TikTok</div>
+<div class="platform">◎ Instagram</div><div class="platform">f Facebook</div>
+<div class="platform">𝕏 X</div><div class="platform">Reddit</div>
+<div class="platform">Pinterest</div><div class="platform">Direct URL</div>
+</div>
+<form id="downloadForm">
+<input id="videoUrl" type="url" placeholder="Paste your video link here..." required>
+<div class="actions">
+<button type="button" id="pasteBtn">Paste Link</button>
+<button type="submit" id="analyzeBtn">Analyze Video →</button>
+</div>
+</form>
+<div id="status" role="status">Ready. Paste a public video link to begin.</div>
+</section>
+<section class="features">
+<div class="feature"><h3>🌐 Multiple Platforms</h3><p>Platform detection for supported video links.</p></div>
+<div class="feature"><h3>🎬 Up to 1080p</h3><p>Show only qualities confirmed by the connected backend.</p></div>
+<div class="feature"><h3>🛡️ Safer Downloads</h3><p>Use supported public links and respect platform restrictions.</p></div>
+</section>
+</main>
+<footer>© 2026 4K Nova · Download only content you have permission to save.</footer>
+<script>
+const input=document.getElementById('videoUrl');
+const status=document.getElementById('status');
+const button=document.getElementById('analyzeBtn');
+
+document.getElementById('pasteBtn').addEventListener('click',async()=>{
+ try{input.value=await navigator.clipboard.readText();status.textContent='Link pasted. Press Analyze Video.'}
+ catch{input.focus();status.textContent='Clipboard access unavailable. Paste your link into the box.'}
+});
+
+document.getElementById('downloadForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ let url;
+ try{url=new URL(input.value.trim())}catch{status.textContent='Please enter a valid video URL.';return}
+ if(!['http:','https:'].includes(url.protocol)){status.textContent='Only HTTP and HTTPS links are supported.';return}
+ const host=url.hostname.toLowerCase().replace(/^www\./,'');
+ let platform='Direct video link';
+ if(host==='youtube.com'||host==='youtu.be'||host==='m.youtube.com')platform='YouTube';
+ else if(host==='tiktok.com')platform='TikTok';
+ else if(host==='instagram.com')platform='Instagram';
+ else if(host==='facebook.com'||host==='fb.watch'||host==='m.facebook.com')platform='Facebook';
+ else if(host==='x.com'||host==='twitter.com')platform='X (Twitter)';
+ else if(host==='reddit.com'||host==='redd.it')platform='Reddit';
+ else if(host==='pinterest.com'||host==='pin.it')platform='Pinterest';
+ else if(host==='vimeo.com')platform='Vimeo';
+ status.textContent='Platform detected: '+platform+'. Checking requires a configured video-download backend. No download has started yet.';
+});
+</script>
+</body>
+  </html>
+  
